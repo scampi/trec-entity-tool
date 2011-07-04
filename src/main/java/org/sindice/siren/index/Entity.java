@@ -54,10 +54,6 @@ public class Entity {
     sbMetadata.setLength(0);
   }
   
-  public String getMetadata() {
-    return sbMetadata.toString();
-  }
-  
   public String getTriples(boolean out) {
     final HashMap<String, HashSet<String>> map = out ? this.outTuples : this.inTuples;
     

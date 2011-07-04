@@ -68,10 +68,7 @@ public class SindiceDEIndexing extends Indexing {
           input[inputPos].getAbsolutePath(), tarEntry.getName());
         throw new IllegalStateException("entry file missing");
       }
-      if (WITH_INCOMING)
-        Utils.getFile(reader, tarEntry.getSize(), entity.sb);
-      else
-        reader.skip(tarEntry.getSize());
+      Utils.getFile(reader, tarEntry.getSize(), entity.sb);
     } catch (IOException e) {
       logger.info("Error while Trying to get the incoming-triples.nt from {}, entry name: {}",
         input[inputPos].getAbsolutePath(), tarEntry.getName());
