@@ -88,14 +88,18 @@ public class SindiceEDIndexing extends Indexing {
             input[inputPos].getAbsolutePath(), tarEntry.getName());
           throw new IllegalStateException("entry file missing");
         }
-        entityByteSize += tarEntry.getSize();
-        if (entityByteSize > MAX_ENTITY_SIZE) {
-          // Too big entity: just keep outgoing-triples, as they are the most informative ones.
-          reader.skip(tarEntry.getSize());
-          entity.inTuples.clear();
+        if (WITH_INCOMING) {
+          entityByteSize += tarEntry.getSize();
+          if (entityByteSize > MAX_ENTITY_SIZE) {
+            // Too big entity: just keep outgoing-triples, as they are the most informative ones.
+            reader.skip(tarEntry.getSize());
+            entity.inTuples.clear();
+          } else {
+            Utils.getFile(reader, tarEntry.getSize(), entity.sb);
+            Utils.sortAndFlattenNTriples(entity.sb, entity.inTuples, null, false);
+          }          
         } else {
-          Utils.getFile(reader, tarEntry.getSize(), entity.sb);
-          Utils.sortAndFlattenNTriples(entity.sb, entity.inTuples, null, false);
+          reader.skip(tarEntry.getSize());
         }
       } while (hasNext(entityID)); // while documents describe the same entity
     } catch (IOException e) {
